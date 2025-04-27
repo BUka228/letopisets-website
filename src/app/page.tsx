@@ -72,20 +72,29 @@ export default function HomePage() {
                </div>
                {/* QR Code Popup */}
                {showQrCode && (
-                  <motion.div
-                     key="qrcode" // Ключ для анимации появления/исчезновения
-                     initial={{ opacity: 0, y: 10 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     exit={{ opacity: 0, y: 10 }}
-                     transition={{ duration: 0.2 }}
-                     className="mt-4 p-3 bg-white rounded-lg inline-block shadow-lg"
-                   >
-                   <QRCodeSVG value={telegramLink} size={128} level="M" includeMargin />
-                   <p className="text-center text-xs text-black mt-2 font-medium">
-                     {t('qr_code_scan_text', language === "ru" ? "Сканировать для добавления" : "Scan to add bot")}
-                   </p>
-                  </motion.div>
-               )}
+                 <motion.div
+                    key="qrcode"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.2 }}
+                    // --- НОВЫЕ СТИЛИ ДЛЯ КОНТЕЙНЕРА QR ---
+                    className="mt-4 p-4 bg-white rounded-lg inline-flex flex-col items-center shadow-lg" // <--- ДОБАВЛЕНЫ inline-flex, flex-col, items-center и увеличен padding
+                  >
+                  <QRCodeSVG
+                     value={telegramLink}
+                     size={128}
+                     level="M"
+                     includeMargin={false}
+                     bgColor="#ffffff"
+                     fgColor="#0B1120"
+                     className="mb-2" // Добавляем небольшой отступ снизу для QR
+                    />
+                  <p className="text-center text-xs text-black font-medium"> {/* Убран mt-2, т.к. есть mb-2 у QR */}
+                    {t('qr_code_scan_text', language === "ru" ? "Сканировать для добавления" : "Scan to add bot")}
+                  </p>
+                 </motion.div>
+              )}
              </motion.div>
 
               {/* Блок с изображением */}

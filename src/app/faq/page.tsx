@@ -2,10 +2,10 @@
 "use client";
 
 import React from "react";
-import { useLanguage } from "../_components/LanguageProvider";
+import { useLanguage } from "../_components/LanguageProvider"; // Путь к вашим компонентам
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Button } from "~/components/ui/button";
-import { HelpCircle, MessageSquare, Send } from "lucide-react";
+import { HelpCircle, MessageSquare, Send, LifeBuoy } from "lucide-react";
 import { Skeleton } from "~/components/ui/skeleton"; // Для лоадера
 
 interface FaqItem {
@@ -20,7 +20,6 @@ export default function FaqPage() {
   let faqItems: FaqItem[] = [];
   const faqItemsContent = content.find((c) => c.key === "faq_items");
 
-  // Парсим только если контент загружен
   if (!isLoadingContent && faqItemsContent) {
     try {
       const parsedData = JSON.parse(
@@ -38,133 +37,148 @@ export default function FaqPage() {
 
    const supportChannelLink = t('support_channel_link', '#');
    const developerContactLink = t('developer_contact_link', '#');
-   const feedbackContactLink = t('feedback_contact_link', developerContactLink); // Ссылка для фидбека = ссылка на разработчика по умолчанию
+   const feedbackContactLink = t('feedback_contact_link', developerContactLink);
+
+   const supportSectionTitle = t('support_section_title', language === "ru" ? "Поддержка и сообщество" : "Support & Community");
+   const supportChannelCardTitle = t('support_channel_card_title', language === "ru" ? "Канал поддержки" : "Support Channel");
+   const supportChannelCardText = t('support_channel_card_text', language === "ru" ? "Присоединяйтесь к нашему официальному каналу, чтобы получать обновления, советы и поддержку:" : "Join our official channel for updates, tips, and support:");
+   const supportChannelButtonText = t('support_channel_button', language === "ru" ? "Перейти в канал" : "Go to Channel");
+   const developerContactCardTitle = t('developer_contact_card_title', language === "ru" ? "Связаться с разработчиком" : "Contact Developer");
+   const developerContactCardText = t('developer_contact_card_text', language === "ru" ? "Для прямой связи с разработчиком или предложения идей:" : "For direct contact with the developer or to suggest ideas:");
+   const developerContactButtonText = t('developer_contact_button', language === "ru" ? "Написать сообщение" : "Send Message");
+   const faqSectionTitle = t('faq_section_title', language === "ru" ? "Часто задаваемые вопросы" : "Frequently Asked Questions");
+   const feedbackCardTitle = t('feedback_card_title', language === "ru" ? "Предложить идею или сообщить об ошибке" : "Suggest an Idea / Report a Bug");
+   const feedbackCardText = t('feedback_card_text', language === "ru" ? "Мы ценим вашу обратную связь и постоянно работаем над улучшением Летописца Чата." : "We value your feedback and are constantly working to improve Chat Chronicler.");
+   const feedbackButtonText = t('feedback_button', language === "ru" ? "Отправить отзыв" : "Send Feedback");
 
     if (isLoadingContent && faqItems.length === 0) {
        // Лоадер для FAQ
         return (
             <div className="container mx-auto px-4 py-16">
                  <Skeleton className="h-10 w-1/2 md:w-1/3 mx-auto mb-12" />
-                 <div className="max-w-4xl mx-auto grid gap-12 lg:grid-cols-3">
-                     <div className="lg:col-span-2 space-y-6">
-                         <Skeleton className="h-6 w-1/3 mb-6" />
-                         {[...Array(4)].map((_, i) => <Skeleton key={i} className="h-32 w-full rounded-lg" />)}
-                     </div>
-                     <div className="lg:col-span-1 space-y-6">
-                         <Skeleton className="h-40 w-full rounded-lg" />
-                         <Skeleton className="h-40 w-full rounded-lg" />
-                    </div>
-                </div>
+                 {/* Лоадер для секции поддержки */}
+                 <Skeleton className="h-8 w-1/3 mb-6" />
+                 <div className="grid md:grid-cols-2 gap-6 mb-12">
+                     <Skeleton className="h-40 w-full rounded-lg" />
+                     <Skeleton className="h-40 w-full rounded-lg" />
+                 </div>
+                 {/* Лоадер для FAQ */}
+                 <Skeleton className="h-8 w-1/3 mb-6" />
+                 <div className="space-y-6">
+                     {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-24 w-full rounded-lg" />)}
+                 </div>
+                 {/* Лоадер для Feedback */}
+                 <Skeleton className="h-40 w-full rounded-lg mt-12" />
             </div>
         );
     }
 
   return (
     <div className="container mx-auto px-4 py-16">
-       <h1 className="text-3xl md:text-4xl font-bold mb-12 text-center">
-         {t('faq_page_title', language === "ru" ? "Поддержка / FAQ" : "Support / FAQ")}
-       </h1>
+      <h1 className="text-3xl md:text-4xl font-bold mb-12 md:mb-16 text-center text-foreground">
+        {t('faq_page_title', language === "ru" ? "Поддержка / FAQ" : "Support / FAQ")}
+      </h1>
 
-       <div className="max-w-4xl mx-auto grid gap-12 lg:grid-cols-3">
+      {/* Секция Поддержки */}
+      <section className="mb-14 md:mb-16">
+        <h2 className="text-2xl font-semibold mb-8 text-center md:text-left text-foreground">
+          {supportSectionTitle}
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          {/* Карточка Канала поддержки */}
+          <Card className="bg-card border border-border shadow-sm flex flex-col rounded-lg overflow-hidden">
+            <CardHeader className="px-5 pt-5 pb-3">
+              <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                <MessageSquare className="h-5 w-5 text-primary flex-shrink-0"/>
+                {supportChannelCardTitle}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="px-5 pb-5 flex-grow flex flex-col justify-between">
+              <p className="mb-5 text-sm text-muted-foreground leading-relaxed">
+                {supportChannelCardText}
+              </p>
+              {supportChannelLink && supportChannelLink !== '#' && supportChannelLink !== '[support_channel_link]' && (
+                // --- ИСПРАВЛЕНО ЗДЕСЬ ---
+                <Button asChild className="w-full mt-auto" size="default" variant="default"><a href={supportChannelLink} target="_blank" rel="noopener noreferrer">{supportChannelButtonText}</a></Button>
+                // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
+              )}
+            </CardContent>
+          </Card>
 
-         {/* FAQ Section */}
-         <section className="lg:col-span-2 space-y-6">
-           <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-             <HelpCircle className="h-6 w-6 text-primary"/>
-             {t('faq_section_title', language === "ru" ? "Часто Задаваемые Вопросы" : "Frequently Asked Questions")}
-          </h2>
+          {/* Карточка Связи с разработчиком */}
+          <Card className="bg-card border border-border shadow-sm flex flex-col rounded-lg overflow-hidden">
+            <CardHeader className="px-5 pt-5 pb-3">
+              <CardTitle className="text-lg font-semibold flex items-center gap-2">
+                <Send className="h-5 w-5 text-primary flex-shrink-0"/>
+                {developerContactCardTitle}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="px-5 pb-5 flex-grow flex flex-col justify-between">
+              <p className="mb-5 text-sm text-muted-foreground leading-relaxed">
+                {developerContactCardText}
+              </p>
+              {developerContactLink && developerContactLink !== '#' && developerContactLink !== '[developer_contact_link]' && (
+                 // --- ИСПРАВЛЕНО ЗДЕСЬ ---
+                 <Button asChild className="w-full mt-auto" size="default" variant="default"><a href={developerContactLink} target="_blank" rel="noopener noreferrer">{developerContactButtonText}</a></Button>
+                 // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Секция FAQ */}
+      <section className="mb-14 md:mb-16">
+        <h2 className="text-2xl font-semibold mb-8 text-center md:text-left flex items-center gap-2 text-foreground">
+          <HelpCircle className="h-6 w-6 text-primary"/>
+          {faqSectionTitle}
+        </h2>
+        <div className="space-y-4">
           {faqItems.length > 0 ? (
             faqItems.map((item, index) => (
-              <Card key={index} className="bg-card border-border shadow-sm">
-                 <CardHeader className="pb-3"> {/* Уменьшим паддинг снизу */}
-                   <CardTitle className="text-lg font-semibold">{item.question}</CardTitle>
-                 </CardHeader>
-                 <CardContent>
-                    {/* Используем div и map для рендеринга параграфов, если в ответе есть переносы строк */}
-                    <div className="text-muted-foreground text-sm leading-relaxed space-y-2">
-                     {item.answer.split('\n').map((line, i) => line.trim() && <p key={i}>{line}</p>)}
-                   </div>
-                 </CardContent>
+              <Card key={index} className="bg-card border border-border shadow-sm overflow-hidden rounded-lg">
+                <CardHeader className="pb-2 pt-4 px-5">
+                  <CardTitle className="text-base font-semibold text-foreground">{item.question}</CardTitle>
+                </CardHeader>
+                <CardContent className="pb-4 px-5">
+                  <div className="text-muted-foreground text-sm leading-relaxed space-y-2 max-w-none md:max-w-prose">
+                    {item.answer.split('\n').map((line, i) => line.trim() && <p key={i}>{line}</p>)}
+                  </div>
+                </CardContent>
               </Card>
             ))
           ) : (
-              <Card className="bg-card border-border shadow-sm">
-                  <CardContent className="pt-6">
-                    <p className="text-muted-foreground text-center">{t('faq_loading_or_error', language === 'ru' ? 'Вопросы загружаются или не найдены...' : 'Questions are loading or not found...')}</p>
-                  </CardContent>
-              </Card>
+            <Card className="bg-card border-border shadow-sm rounded-lg">
+              <CardContent className="pt-6 pb-6">
+                <p className="text-muted-foreground text-center">{t('faq_loading_or_error', language === 'ru' ? 'Вопросы не найдены или произошла ошибка загрузки.' : 'Questions not found or failed to load.')}</p>
+              </CardContent>
+            </Card>
           )}
-        </section>
+        </div>
+      </section>
 
-         {/* Support Section */}
-         <aside className="lg:col-span-1 space-y-6">
-            {/* Support Channel Card */}
-           <Card className="bg-card border-border shadow-sm">
-             <CardHeader>
-                 <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                    <MessageSquare className="h-5 w-5 text-primary"/>
-                    {t('support_channel_card_title', language === "ru" ? "Канал поддержки" : "Support Channel")}
-                </CardTitle>
-             </CardHeader>
-            <CardContent>
-               <p className="mb-4 text-sm text-muted-foreground">
-                 {t('support_channel_card_text', language === "ru" ? "Присоединяйтесь к нашему официальному каналу для новостей, анонсов и обсуждений." : "Join our channel for news, announcements, and discussions.")}
+      {/* Секция Фидбека */}
+      <section>
+         <Card className="bg-muted border-border shadow-sm rounded-lg">
+            <CardHeader className="px-5 pt-5 pb-3">
+               <CardTitle className="text-lg font-semibold flex items-center gap-2 text-foreground">
+                   <LifeBuoy className="h-5 w-5 text-primary"/>
+                  {feedbackCardTitle}
+               </CardTitle>
+            </CardHeader>
+            <CardContent className="px-5 pb-5">
+               <p className="mb-5 text-sm text-muted-foreground leading-relaxed">
+                  {feedbackCardText}
                </p>
-                {supportChannelLink && supportChannelLink !== '#' && supportChannelLink !== '[support_channel_link]' && (
-                    <Button asChild className="w-full" size="sm">
-                      <a href={supportChannelLink} target="_blank" rel="noopener noreferrer">
-                        {t('support_channel_button', language === "ru" ? "Перейти в Канал" : "Go to Channel")}
-                      </a>
-                    </Button>
-                )}
-            </CardContent>
-          </Card>
+               {feedbackContactLink && feedbackContactLink !== '#' && feedbackContactLink !== '[feedback_contact_link]' && (
+                   // --- ИСПРАВЛЕНО ЗДЕСЬ ---
+                   <Button asChild size="default"><a href={feedbackContactLink} target="_blank" rel="noopener noreferrer">{feedbackButtonText}</a></Button>
+                    // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
+               )}
+           </CardContent>
+        </Card>
+      </section>
 
-            {/* Contact Developer Card */}
-           <Card className="bg-card border-border shadow-sm">
-             <CardHeader>
-                 <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                    <Send className="h-5 w-5 text-primary"/>
-                   {t('developer_contact_card_title', language === "ru" ? "Связаться с Разработчиком" : "Contact Developer")}
-                </CardTitle>
-             </CardHeader>
-            <CardContent>
-               <p className="mb-4 text-sm text-muted-foreground">
-                 {t('developer_contact_card_text', language === "ru" ? "Есть идеи, предложения или нашли ошибку? Напишите напрямую." : "Have ideas, suggestions, or found a bug? Contact directly.")}
-               </p>
-                 {developerContactLink && developerContactLink !== '#' && developerContactLink !== '[developer_contact_link]' && (
-                    <Button asChild className="w-full" size="sm">
-                      <a href={developerContactLink} target="_blank" rel="noopener noreferrer">
-                        {t('developer_contact_button', language === "ru" ? "Написать Сообщение" : "Send Message")}
-                      </a>
-                    </Button>
-                )}
-            </CardContent>
-          </Card>
-
-           {/* Feedback Section (внутри aside) */}
-            <Card className="bg-muted border-border shadow-sm">
-                 <CardHeader>
-                    <CardTitle className="text-lg font-semibold">
-                        {t('feedback_card_title', language === "ru" ? "Предложить идею / Сообщить об ошибке" : "Suggest an Idea / Report a Bug")}
-                    </CardTitle>
-                </CardHeader>
-                 <CardContent>
-                    <p className="mb-4 text-sm text-muted-foreground">
-                        {t('feedback_card_text', language === "ru" ? "Ваша обратная связь помогает нам улучшать Летописца Чата." : "Your feedback helps us improve Chat Chronicler.")}
-                    </p>
-                     {feedbackContactLink && feedbackContactLink !== '#' && feedbackContactLink !== '[feedback_contact_link]' && (
-                        <Button asChild className="w-full" size="sm">
-                            <a href={feedbackContactLink} target="_blank" rel="noopener noreferrer">
-                                {t('feedback_button', language === "ru" ? "Отправить отзыв" : "Send Feedback")}
-                            </a>
-                        </Button>
-                     )}
-                </CardContent>
-             </Card>
-        </aside>
-
-      </div>
     </div>
   );
 }
