@@ -1,5 +1,5 @@
-// src/app/_components/LanguageProvider.tsx (Версия БЕЗ Базы Данных)
-"use client"; // Обязательно для хуков useState, useEffect, useContext и localStorage
+// src/app/_components/LanguageProvider.tsx
+"use client";
 
 import React, {
   useState,
@@ -10,60 +10,57 @@ import React, {
   Dispatch,
   SetStateAction,
 } from "react";
-// --- ИМПОРТ СТАТИЧЕСКОГО КОНТЕНТА ---
-import { ruContent } from '~/content/ru'; // Путь к вашему русскому контенту
-import { enContent } from '~/content/en'; // Путь к вашему английскому контенту
-import type { ContentData, ExampleData, FaqItem, FeatureData } from '~/content/types'; // Путь к вашим типам
-// --- КОНЕЦ ИМПОРТА КОНТЕНТА ---
-
-// Импорты иконок (остаются)
+// Убрали useQuery и apiClient
+import { ruContent } from '~/content/ru';
+import { enContent } from '~/content/en';
+import type { ContentData } from '~/content/types'; // Импорт типов
 import {
   BookOpen,
   UserCircle,
   Image,
   BarChart,
   Settings,
-  LucideProps,
+  LucideProps, // Импортируем тип для иконок
 } from "lucide-react";
 
-// --- Тип языка ---
 export type Language = "ru" | "en";
 
-// --- Карта иконок ---
+// Карта иконок
+// Добавляем aria-hidden="true", чтобы скринридеры игнорировали декоративные иконки
+// Или можно добавить осмысленный <title> внутрь SVG, если иконка несет смысл
 export const iconMap: Record<string, React.ReactElement<LucideProps>> = {
-  BookOpen: <BookOpen className="h-6 w-6" />,
-  UserCircle: <UserCircle className="h-6 w-6" />,
-  Image: <Image className="h-6 w-6" />,
-  BarChart: <BarChart className="h-6 w-6" />,
-  Settings: <Settings className="h-6 w-6" />,
-  Default: <BookOpen className="h-6 w-6" />,
+  BookOpen: <BookOpen className="h-6 w-6" aria-hidden="true" />,
+  UserCircle: <UserCircle className="h-6 w-6" aria-hidden="true" />,
+  Image: <Image className="h-6 w-6" aria-hidden="true" />,
+  BarChart: <BarChart className="h-6 w-6" aria-hidden="true" />,
+  Settings: <Settings className="h-6 w-6" aria-hidden="true" />,
+  Default: <BookOpen className="h-6 w-6" aria-hidden="true" />,
 };
 
-// --- Тип для значения Контекста ---
+// Тип для значения Контекста
 interface LanguageContextType {
   language: Language;
   setLanguage: Dispatch<SetStateAction<Language>>;
-  t: (key: keyof ContentData | string, fallback?: string) => any; // Ключ может быть из ContentData
-  // Предоставляем весь объект контента для текущего языка
+  // --- ИЗМЕНЕНИЕ: t теперь возвращает только string или undefined ---
+  t: (key: string, fallback?: string) => string | undefined;
+  // Оставляем currentContent для доступа к массивам
   currentContent: ContentData;
 }
 
-// --- Создание Контекста с начальными значениями ---
-// ВАЖНО: начальное значение currentContent должно быть одним из реальных объектов контента
+// Создание Контекста
 const LanguageContext = createContext<LanguageContextType>({
-  language: "en", // Начинаем с английского
-  setLanguage: () => {
-    console.warn("setLanguage called outside of LanguageProvider");
-  },
-  t: (key, fallback) => fallback ?? `[${key}]`,
-  currentContent: enContent, // Используем enContent как начальное значение
+  language: "en",
+  setLanguage: () => {},
+  // --- ИЗМЕНЕНИЕ: Дефолтный t тоже возвращает string | undefined ---
+  t: (key, fallback) => fallback ?? undefined,
+  currentContent: enContent,
 });
 
-// --- Компонент Провайдера ---
+// Компонент Провайдера
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('en'); // Начальное состояние
+  const [language, setLanguage] = useState<Language>('en');
 
-  // Эффект для загрузки языка из localStorage или определения по браузеру
+  // Загрузка языка
   useEffect(() => {
     let initialLang: Language = "en";
     const savedLanguage = localStorage.getItem("preferredLanguage");
@@ -75,46 +72,42 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         initialLang = browserLang.startsWith("ru") ? "ru" : "en";
       }
     }
-    // Устанавливаем язык только если он отличается от начального,
-    // чтобы избежать лишнего ререндера при гидратации
-    if (initialLang !== language) {
-        setLanguage(initialLang);
-    }
-  }, []); // Пустой массив зависимостей - выполнится один раз при монтировании
+    // Установка языка только при необходимости
+     if (initialLang !== language) { // Проверка, чтобы избежать лишнего ререндера
+       setLanguage(initialLang);
+     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Оставляем пустым, т.к. language здесь не нужен и вызовет цикл
 
-  // Эффект для сохранения языка в localStorage при его изменении
+  // Сохранение языка
   useEffect(() => {
-    // Сохраняем только если язык не равен начальному 'en' ИЛИ если он уже был загружен
-    // (простая проверка, чтобы не сохранять дефолтное значение до первой установки)
-    if (language !== 'en' || localStorage.getItem("preferredLanguage")) {
+     if (language) {
        localStorage.setItem("preferredLanguage", language);
-    }
-  }, [language]);
+     }
+  // --- ИСПРАВЛЕН МАССИВ ЗАВИСИМОСТЕЙ ---
+  }, [language]); // Добавили language
+  // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
 
-  // --- УБРАЛИ useQuery ---
-
-  // Выбираем нужный объект контента на основе текущего языка
+  // Выбираем контент
   const currentContent = language === 'ru' ? ruContent : enContent;
 
-  // --- Функция перевода (работает с currentContent) ---
-  const t = (key: string, fallback?: string): string | FaqItem[] | FeatureData[] | ExampleData[] | undefined => {
-    // Проверяем, является ли ключ валидным ключом интерфейса ContentData
-    // Используем утверждение типа (type assertion) 'as keyof ContentData'
+  // Функция перевода
+  // --- ИСПРАВЛЕН ТИП ВОЗВРАЩАЕМОГО ЗНАЧЕНИЯ и ЛОГИКА t ---
+  const t = (key: string, fallback?: string): string | undefined => {
     if (key in currentContent) {
-      // Утверждаем, что key - это ключ ContentData, чтобы получить доступ
       const value = currentContent[key as keyof ContentData];
-
-      // Возвращаем значение, если оно определено и не null
-      // Если null или undefined, возвращаем fallback (если есть), иначе undefined
-      return (value !== undefined && value !== null) ? value : fallback;
+      // Проверяем, что значение является строкой
+      if (typeof value === 'string') {
+        return value; // Возвращаем строку
+      } else {
+         // Если значение не строка (массив или др.), логируем и возвращаем fallback/undefined
+         console.warn(`Value for key "${key}" is not a string.`);
+         return fallback;
+      }
     }
-
-    // Если ключ не найден
     console.warn(`Translation key not found: "${key}" for language "${language}"`);
-    // Возвращаем fallback (если есть), иначе undefined
     return fallback;
   };
-  // --- Конец функции перевода ---
 
   return (
     <LanguageContext.Provider
@@ -122,7 +115,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
         language,
         setLanguage,
         t,
-        currentContent, // Передаем весь актуальный объект контента
+        currentContent,
       }}
     >
       {children}
@@ -130,11 +123,10 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// --- Пользовательский Хук для использования Контекста ---
+// Хук для использования Контекста
 export function useLanguage() {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    // Эта ошибка не должна возникать, если вы правильно обернули приложение в LanguageProvider
     throw new Error("useLanguage must be used within a LanguageProvider");
   }
   return context;

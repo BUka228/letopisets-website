@@ -48,11 +48,29 @@ export default function SiteLayout({ children }: SiteLayoutProps) {
 
   // Хелпер функция для получения текста ссылки
   const getNavLinkLabel = (link: typeof navLinks[0]): string => {
-      if (link.labelRu && language === 'ru') return link.labelRu;
-      if (link.labelEn && language === 'en') return link.labelEn;
-      const translated = t(link.labelKey);
-      return link.split ? translated.split(":")[0] : translated;
-  };
+    // Сначала проверяем прямые значения для текущего языка
+    if (link.labelRu && language === 'ru') return link.labelRu;
+    if (link.labelEn && language === 'en') return link.labelEn;
+
+    // Получаем перевод через t(), который может вернуть string или undefined
+    const translated = t(link.labelKey);
+
+    // --- ИСПРАВЛЕНИЕ ЗДЕСЬ ---
+    // Проверяем, что translated - это строка и нужно ли ее делить
+    if (typeof translated === 'string') {
+        // Если нужно делить (split: true) и строка содержит ':', делим
+        if (link.split && translated.includes(':')) {
+            return translated.split(":")[0];
+        }
+        // Иначе возвращаем строку как есть
+        return translated;
+    }
+    // --- КОНЕЦ ИСПРАВЛЕНИЯ ---
+
+    // Если перевод не найден (translated === undefined), возвращаем ключ как fallback
+    // Или можно вернуть пустую строку ''
+    return `[${link.labelKey}]`;
+};
 
   return (
     <div className="min-h-screen flex flex-col">

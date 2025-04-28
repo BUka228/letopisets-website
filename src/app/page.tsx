@@ -25,6 +25,7 @@ export default function HomePage() {
 
   // Получаем URL изображения бота, используем t() с fallback для ключа
   const botImageUrl = t('bot_image', '/images/bot-avatar.png');
+  const botImageAltText = t('bot_image_alt', 'Chat Chronicler Bot illustration');
 
   // Получаем имя пользователя бота для ссылки
   const botUsername = t("telegram_bot_username", "LetopisetsChatBot");
@@ -116,7 +117,7 @@ export default function HomePage() {
                     // eslint-disable-next-line @next/next/no-img-element
                     <img // Или <Image> из next/image, если настроен loader
                        src={botImageUrl}
-                       alt={t('bot_image_alt', "Chat Chronicler Demo")}
+                       alt={botImageAltText}
                        width={450} // Примерная ширина, можно настроить
                        height={450} // Примерная высота
                        className="max-w-xs md:max-w-sm lg:max-w-md h-auto rounded-lg shadow-2xl object-contain"
