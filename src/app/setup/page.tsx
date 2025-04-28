@@ -6,33 +6,13 @@ import { QRCodeSVG } from "qrcode.react";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { useLanguage } from "../_components/LanguageProvider";
-import { Skeleton } from "~/components/ui/skeleton"; // Для лоадера
 
 export default function SetupPage() {
-  const { t, language, isLoadingContent } = useLanguage();
+  const { t, language } = useLanguage();
   const [showQrEnlarged, setShowQrEnlarged] = useState(false);
 
   const botUsername = t("telegram_bot_username", "LetopisetsChatBot");
   const telegramLink = `https://t.me/${botUsername}?startgroup=true`;
-
-
-  if (isLoadingContent) {
-     // Простой лоадер для страницы установки
-    return (
-      <div className="container mx-auto px-4 py-16">
-        <Skeleton className="h-10 w-1/2 md:w-1/3 mx-auto mb-8" />
-        <Skeleton className="h-6 w-3/4 md:w-1/2 mx-auto mb-12" />
-         <div className="flex flex-col md:flex-row justify-center items-start md:items-center gap-8 mb-12">
-            <Skeleton className="w-48 h-48 rounded-lg" />
-            <Skeleton className="w-48 h-12 rounded-lg" />
-        </div>
-        <div className="max-w-2xl mx-auto space-y-6">
-           <Skeleton className="h-40 w-full rounded-lg" />
-           <Skeleton className="h-40 w-full rounded-lg" />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="container mx-auto px-4 py-16">

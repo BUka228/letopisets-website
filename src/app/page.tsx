@@ -33,22 +33,6 @@ export default function HomePage() {
   // --- Конец получения данных ---
 
 
-  // --- Лоадер ---
-  // Проверяем, загружен ли вообще объект currentContent (хотя без useQuery он должен быть всегда)
-  // Более надежно проверять наличие какого-то ключевого поля
-  const isLoading = !currentContent?.hero_title; // Считаем, что грузится, если нет заголовка
-
-  if (isLoading) {
-     return (
-       <div className="flex justify-center items-center min-h-[calc(100vh-10rem)]">
-         {/* Можно заменить на более красивый спиннер/анимацию */}
-         <p>Loading...</p>
-       </div>
-     );
-  }
-  // --- Конец Лоадера ---
-
-
   return (
     // Обертка для страницы
     <div className="flex flex-col">
