@@ -46,7 +46,7 @@ export const enContent: ContentData = {
 
 ## 1. Introduction
 
-Welcome! This Privacy Policy describes how [Your Name or Project Name] ("we", "us", or "our") collects, uses, and discloses user information ("you") when you use our Telegram bot "Chat Chronicler" ("Bot") and its associated website ([Your Website Address]) ("Site").
+Welcome! This Privacy Policy describes how LetopisetsChata ("we", "us", or "our") collects, uses, and discloses user information ("you") when you use our Telegram bot "Chat Chronicler" ("Bot") and its associated website (https://www.chat-letopisets.ru/) ("Site").
 
 By using the Bot or the Site, you agree to the terms of this Privacy Policy. If you do not agree with these terms, please do not use the Bot or the Site. Administrators of Telegram groups who add the Bot to their chats are responsible for informing their chat members about the Bot's operation and this Policy.
 
@@ -101,8 +101,8 @@ We use the collected information for the following purposes:
 
 ## 5. Data Storage
 
-*   Collected data (messages, settings, feedback) is stored in an SQLite database located on our server ([Specify hosting type/location, e.g., on a Cloud.ru VM in Russia]).
-*   The message retention period is determined by the "Retention Period" setting (\`retention_days\`) in the chat settings. By default, messages are stored for [Your DEFAULT_RETENTION_DAYS value] days. The administrator can change this period or set indefinite storage (value 0 or null). Messages older than the set period are automatically deleted by the Bot.
+*   Collected data (messages, settings, feedback) is stored in an SQLite database located on our server (on a Cloud.ru VM in Russia).
+*   The message retention period is determined by the "Retention Period" setting (\`retention_days\`) in the chat settings. By default, messages are stored for 30 days. The administrator can change this period or set indefinite storage (value 0 or null). Messages older than the set period are automatically deleted by the Bot.
 *   Administrators can manually delete the entire message history stored by the Bot for their chat using the \`/purge_history\` command.
 *   Chat settings and feedback data are stored as long as the Bot is installed in the chat or until manually deleted.
 
@@ -113,7 +113,7 @@ We do not sell or transfer your personal information to third parties for market
 *   **Google (Gemini API):** Text content of messages and information from images are sent to the Google Gemini API for artificial intelligence processing and generation of summaries/comments. Transmission occurs via our secure proxy service. We adhere to the standard terms of use for Google Cloud AI Services.
 *   **Cloudflare (Workers):** Our proxy service, running on Cloudflare Workers, handles requests to the Google Gemini API and relays responses back to the Bot. Cloudflare may collect service logs according to its privacy policy.
 *   **Telegram:** The Telegram platform processes all messages and interactions with the Bot according to its Privacy Policy.
-*   **Hosting Providers:** [Your Bot Server Hosting Provider, e.g., Cloud.ru] and [Your Website Hosting Provider, e.g., Vercel] may have access to technical server logs in accordance with their policies.
+*   **Hosting Providers:** Cloud.ru and Vercel may have access to technical server logs in accordance with their policies.
 
 We require all third parties with whom we share data to respect the confidentiality and security of your data.
 
@@ -137,7 +137,7 @@ Our Bot and Site are not intended for use by individuals under the age of 13 (or
 
 ## 10. Changes to This Privacy Policy
 
-We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting the new Policy on the Site ([Your Website Address]) and/or via the Bot's support channel (https://t.me/letopisets_chat_official). It is recommended to review this Policy periodically for any changes.
+We may update this Privacy Policy from time to time. We will notify you of any significant changes by posting the new Policy on the Site (https://www.chat-letopisets.ru/) and/or via the Bot's support channel (https://t.me/letopisets_chat_official). It is recommended to review this Policy periodically for any changes.
 `, 
   final_cta_title: "Ready to try Chat Chronicler?",
   final_cta_text: "Add the bot to your Telegram group right now!",
